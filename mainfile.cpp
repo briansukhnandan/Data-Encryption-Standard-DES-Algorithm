@@ -4,7 +4,7 @@
 #include <bitset>
 using namespace std;
 
-//Global variables for DES initial permutation
+//Global variables for DES permutations
 int initialPermTable[64] = { 57, 49, 41, 33, 25, 17, 9, 1,
                         	 59, 51, 43, 35, 27, 19, 11, 3,
                         	 61, 53, 45, 37, 29, 21, 13, 5,
@@ -13,42 +13,49 @@ int initialPermTable[64] = { 57, 49, 41, 33, 25, 17, 9, 1,
                         	 58, 50, 42, 34, 26, 18, 10, 2,
                         	 60, 52, 44, 36, 28, 20, 12, 4,
                         	 62, 54, 46, 38, 30, 22, 14, 6 };
+                        	 
+int subKeyPermTable[48] = { 14, 17, 11, 24, 1, 5, 
+							3, 28, 15, 6, 21, 10,
+						 	23, 19, 12, 4, 26, 8,
+							16, 7, 27, 20, 13, 2,
+							41, 52, 31, 37, 47, 55,
+							30, 40, 51, 45, 33, 48,
+							44, 49, 39, 56, 34, 53,
+							46, 42, 50, 36, 29, 32 };
                         
-
-void numberToBinary(int x) {
-    
-    int r;
-    int y[1000];
-    int elements;
-    int index = 0;
-    
-  //  r = x % 2;
-    do {
-        
-        r = x%2;
-        
-        y[index] = r;
-        
-        x /= 2;
-        
-        index++;
-        
-    }while (x > 0);
-    
-    for (int i = index - 1; i >= 0; i--) {
-        
-        cout << y[i]; 
-        
-    }
-    
-    
+void printArray(bool x[], int size) {
+	
+	for (int i = 0; i < size; i++) {
+		
+		cout << x[i];
+				
+	}
+		
 }
 
-string boolvectoString(vector<bool> x) {
+void leftShiftVector(vector<bool>&a) {
+	
+	bool temp = a[0];
+	
+	for (int i = 0; i < a.size(); i++) {
+		
+		a[i] = a[i+1];
+		
+		if (i == a.size() - 1) {
+			
+			a[a.size()-1] = temp;
+			
+		}
+		
+	}	
+	
+}
+
+string boolVecToString(vector<bool> x) {
 	
 	string z = "";
 	
-	for (int i = 0; i < 64; i++) {
+	for (int i = 0; i < x.size(); i++) {
 		
 		if (x[i] == true) {
 			
@@ -59,9 +66,9 @@ string boolvectoString(vector<bool> x) {
 			z += "0";
 			
 		}
-		
-		
+			
 	}
+	
 	return z;
 }
 
@@ -75,6 +82,7 @@ string stringToBinary(string x) {
         y += bitset<8>(x.c_str()[i]).to_string();
         
     }
+    
     //Returns a string of the binary representation.
     //In c++, since strings can be treated as an array,
     //this seems like a suitable choice.
@@ -89,7 +97,6 @@ void insertBinaryVector(string y, vector<bool> &z) {
             
             z.push_back(false);
             
-            
         } else {
             
             z.push_back(true);
@@ -103,8 +110,9 @@ void insertBinaryVector(string y, vector<bool> &z) {
 //In the initial permutation, the 64 bit key we had will now be reduced to 56 bits.
 vector<bool> initialPermutation(vector<bool> x) {
 	
-	string z = boolvectoString(x);
-	cout << "Bool Vector put back into a string: " << endl;
+	string z = boolVecToString(x);
+	
+/*	cout << "Bool Vector put back into a string: " << endl;
 	for (int j = 0; j < 64; j++) {
 		
 		cout << z[j];
@@ -113,15 +121,13 @@ vector<bool> initialPermutation(vector<bool> x) {
 			cout << endl;
 		}
 		
-	}
-	cout << endl;
-//	cout << "Bool Vector put back into a string: " <<  z << endl;
+	} 
+	cout << endl; */
 	
     //Original vector size is 64.
     //This new vector<bool> y will contain 56 bits (elements).
     vector<bool> y;
     
-    //The 
     for (int i = 0; i < 56; i++) {
     	
     	if ( (z[initialPermTable[i]]) == '1') {
@@ -132,14 +138,102 @@ vector<bool> initialPermutation(vector<bool> x) {
 			
 			y.push_back(false);
 			
-		}
-    	
-    	
+		} 	
     	
 	}
-    
-    
+        
     return y;
+}
+
+vector<bool> subKey(vector<bool>&x) {
+	
+	//Take the permutated 56-bit vector, and split it in half
+	//Then perform a left shift on both containers.
+	//Put the entire string back together
+	//And the 48 bit subkey will be a permutation from the
+	//subkey table
+	
+	vector<bool> a; //Contains first 28 elements.
+	vector<bool> b; //Contains last 28 elements.
+	
+	for (int i = 0; i < 56; i++) {
+		
+		if (i < 28) {
+			
+			a.push_back(x[i]);
+			
+		} else {
+			
+			b.push_back(x[i]);
+			
+		}
+				
+	}
+	/*
+	cout << "First 28 bits of the 56-bit key: ";
+	for (int j = 0; j < 28; j++) cout << a[j];
+	cout << endl;
+	cout << endl;
+	
+	cout << "Last 28 bits of the 56-bit key: ";
+	for (int j = 0; j < 28; j++) cout << b[j];
+	cout << endl;
+	cout << endl; */
+	
+	leftShiftVector(a);
+	leftShiftVector(b);
+	
+	cout << "Shifted left First 28 bits of the 56-bit key: ";
+	for (size_t j = 0; j < a.size(); j++) cout << a[j];
+	cout << endl;
+	cout << endl;
+	
+	cout << "Shifted 28 Last 28 bits of the 56-bit key: ";
+	for (size_t j = 0; j < b.size(); j++) cout << b[j];
+	cout << endl;
+	cout << endl; 
+	
+	vector<bool> mergedVector;
+
+	for (int k = 0; k < 28; k++) {	
+			
+		mergedVector.push_back(a[k]);
+		
+	}
+	
+	for (int k = 0; k < 28; k++) {
+		
+		mergedVector.push_back(b[k]);
+		
+	}
+	
+	//Merged vector has 56 bits (post-shift) now in
+	//otherPermutations we call this vector
+	//and create a subkey of 48 bits based off the global var.
+	return mergedVector;
+}
+
+vector<bool> otherPermutations(vector<bool> x) {
+	
+	string z = boolVecToString(x);
+	vector<bool> a;
+	
+	for (int i = 0; i < 48; i++) {
+    	
+    	if ( (z[subKeyPermTable[i] - 1]) == '1') {
+    		
+    		a.push_back(true);
+    		
+		} else {
+			
+			a.push_back(false);
+			
+		} 	
+    	
+	}
+	
+	return a;
+	
 }
 
 //Key we're working with: ABCDEFGH
@@ -158,12 +252,12 @@ int main() {
     string stringKey = "ABCDEFGH";
     
     string newBinaryKey = stringToBinary(stringKey);
-    cout << "newBinaryKey " << newBinaryKey << endl;
+//    cout << "newBinaryKey " << newBinaryKey << endl;
+    
     //Initial key should have 64 bits inside.
     vector<bool> initialKeyVector;
     
     insertBinaryVector(newBinaryKey, initialKeyVector);
-    
     
     cout << endl << "Vector of bool values: ";
     
@@ -175,10 +269,11 @@ int main() {
     cout << endl;
 	cout << endl;
 	
+	//firstPermutatedVec now contains 56 bits of data.
 	vector<bool> firstPermutatedVec = initialPermutation(initialKeyVector);  
 	
 	cout << "First permutation key: " << endl;
-	for (int j = 0; j < 64; j++) {
+	for (int j = 0; j < 56; j++) {
 		
 		cout << firstPermutatedVec[j];
 		
@@ -189,6 +284,17 @@ int main() {
 		
 	}
 	cout << endl;
+	cout << endl;
+	
+	vector<bool> firstSubKeybeforePerm = subKey(firstPermutatedVec);
+	
+//	string firstSubKeyStringbeforePerm = boolVecToString(firstSubKeybeforePerm);
+//	cout << firstSubKeyStringbeforePerm << endl;
+
+	vector<bool> secondSubKey = otherPermutations(secondSubKey);
+	string s = boolVecToString(secondSubKey);
+	cout << s << endl;
+	
       
     return 0;
 }
