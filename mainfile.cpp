@@ -291,7 +291,7 @@ int main() {
 //	string firstSubKeyStringbeforePerm = boolVecToString(firstSubKeybeforePerm);
 //	cout << firstSubKeyStringbeforePerm << endl;
 
-	vector<bool> secondSubKey = otherPermutations(secondSubKey);
+	vector<bool> secondSubKey = otherPermutations(firstSubKeybeforePerm);
 	string s = boolVecToString(secondSubKey);
 	cout << s << endl;
 	
