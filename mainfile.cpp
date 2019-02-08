@@ -30,11 +30,29 @@ void printArray(vector<bool> a) {
 		cout << a[i];
 		
 		if ((i+1) % 8 == 0) {
-			cout << endl;
+		//	cout << endl;
 		} 
 				
 	}
 		
+}
+
+void print2dBoolVec(vector<vector<bool>> x) {
+	
+	for (size_t i = 0; i < x.size(); i++) {
+		
+		cout << "Subkey " << i+1 <<": ";
+		
+		for (size_t j = 0; j < x[0].size(); j++) {
+			
+			cout << x[i][j];
+			
+			
+		}
+		cout << endl;
+	}
+	
+	
 }
 
 void leftShiftVector(vector<bool>&a) {
@@ -261,14 +279,14 @@ int main() {
     string stringKey = "ABCDEFGH";
     
     string newBinaryKey = stringToBinary(stringKey);
-//    cout << "newBinaryKey " << newBinaryKey << endl;
+//  cout << "newBinaryKey " << newBinaryKey << endl;
     
     //Initial key should have 64 bits inside.
     vector<bool> initial64KeyVector;
     
     insertBinaryVector(newBinaryKey, initial64KeyVector);
     
-    cout << endl << "Vector of bool values: ";
+    cout << endl << "Original 64-bit key: ";
     
     for (int i = 0; i < initial64KeyVector.size(); i++) {
         
@@ -281,7 +299,7 @@ int main() {
 	//firstPermutatedVec now contains 56 bits of data.
 	vector<bool> initial56KeyVector = initialPermutation(initial64KeyVector);  
 	
-	cout << "First 56-bit key: " << endl;
+/*	cout << "First 56-bit key: " << endl;
 	for (int j = 0; j < 56; j++) {
 		
 		cout << initial56KeyVector[j];
@@ -293,18 +311,40 @@ int main() {
 		
 	}
 	cout << endl;
-	cout << endl;
+	cout << endl; */
+	
+	vector<vector<bool>> listOfSubkeys;
+	int rounds = 1;
 	
 	vector<bool> shiftedsubKeybeforePerm = newShiftedVector(initial56KeyVector);
 	
 	string SubKeyStringbeforePerm = boolVecToString(shiftedsubKeybeforePerm);
-	cout << "Merged 56-bit key: " << SubKeyStringbeforePerm << endl;
+	cout << "Merged 56-bit key used to get Subkey 1: " << SubKeyStringbeforePerm << endl << endl;
 
-	vector<bool> subKeys = subKeyPermutations(SubKeyStringbeforePerm);
-	printArray(subKeys);
+	vector<bool> subKey = subKeyPermutations(SubKeyStringbeforePerm);
+	
+//	printArray(subKey);
 //	string s = boolVecToString(secondSubKey);
 //	cout << s << endl;
+
+	listOfSubkeys.push_back(subKey);
 	
+	shiftedsubKeybeforePerm = newShiftedVector(shiftedsubKeybeforePerm);
+	
+	while (rounds < 16) {
+		
+		SubKeyStringbeforePerm = boolVecToString(shiftedsubKeybeforePerm);
+		
+		subKey = subKeyPermutations(SubKeyStringbeforePerm);
+		
+		listOfSubkeys.push_back(subKey);
+		
+		shiftedsubKeybeforePerm = newShiftedVector(shiftedsubKeybeforePerm);
+		rounds++;
+	}
+	
+	cout << "List of Subkeys: " << endl;
+	print2dBoolVec(listOfSubkeys);
       
     return 0;
 }
