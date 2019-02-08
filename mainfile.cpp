@@ -23,11 +23,15 @@ int subKeyPermTable[48] = { 14, 17, 11, 24, 1, 5,
 							44, 49, 39, 56, 34, 53,
 							46, 42, 50, 36, 29, 32 };
                         
-void printArray(bool x[], int size) {
+void printArray(vector<bool> a) {
 	
-	for (int i = 0; i < size; i++) {
+	for (int i = 0; i < a.size(); i++) {
 		
-		cout << x[i];
+		cout << a[i];
+		
+		if ((i+1) % 8 == 0) {
+			cout << endl;
+		} 
 				
 	}
 		
@@ -108,6 +112,7 @@ void insertBinaryVector(string y, vector<bool> &z) {
 }
 
 //In the initial permutation, the 64 bit key we had will now be reduced to 56 bits.
+//This is the initial 56-bit key.
 vector<bool> initialPermutation(vector<bool> x) {
 	
 	string z = boolVecToString(x);
@@ -145,7 +150,10 @@ vector<bool> initialPermutation(vector<bool> x) {
     return y;
 }
 
-vector<bool> subKey(vector<bool>&x) {
+//This function simply takes in the 56 bit key and produces
+//the new bool vector so we can permute it and save it as
+//another vector bool.
+vector<bool> newShiftedVector(vector<bool> x) {
 	
 	//Take the permutated 56-bit vector, and split it in half
 	//Then perform a left shift on both containers.
@@ -156,6 +164,7 @@ vector<bool> subKey(vector<bool>&x) {
 	vector<bool> a; //Contains first 28 elements.
 	vector<bool> b; //Contains last 28 elements.
 	
+	//Fill the arrays with these elements.
 	for (int i = 0; i < 56; i++) {
 		
 		if (i < 28) {
@@ -182,7 +191,7 @@ vector<bool> subKey(vector<bool>&x) {
 	
 	leftShiftVector(a);
 	leftShiftVector(b);
-	
+	/*
 	cout << "Shifted left First 28 bits of the 56-bit key: ";
 	for (size_t j = 0; j < a.size(); j++) cout << a[j];
 	cout << endl;
@@ -191,7 +200,7 @@ vector<bool> subKey(vector<bool>&x) {
 	cout << "Shifted 28 Last 28 bits of the 56-bit key: ";
 	for (size_t j = 0; j < b.size(); j++) cout << b[j];
 	cout << endl;
-	cout << endl; 
+	cout << endl;  */
 	
 	vector<bool> mergedVector;
 
@@ -213,14 +222,14 @@ vector<bool> subKey(vector<bool>&x) {
 	return mergedVector;
 }
 
-vector<bool> otherPermutations(vector<bool> x) {
+vector<bool> subKeyPermutations(string x) {
 	
-	string z = boolVecToString(x);
+//	string z = boolVecToString(x);
 	vector<bool> a;
 	
 	for (int i = 0; i < 48; i++) {
     	
-    	if ( (z[subKeyPermTable[i] - 1]) == '1') {
+    	if ( (x[subKeyPermTable[i] - 1]) == '1') {
     		
     		a.push_back(true);
     		
@@ -255,27 +264,27 @@ int main() {
 //    cout << "newBinaryKey " << newBinaryKey << endl;
     
     //Initial key should have 64 bits inside.
-    vector<bool> initialKeyVector;
+    vector<bool> initial64KeyVector;
     
-    insertBinaryVector(newBinaryKey, initialKeyVector);
+    insertBinaryVector(newBinaryKey, initial64KeyVector);
     
     cout << endl << "Vector of bool values: ";
     
-    for (int i = 0; i < initialKeyVector.size(); i++) {
+    for (int i = 0; i < initial64KeyVector.size(); i++) {
         
-        cout << initialKeyVector[i];
+        cout << initial64KeyVector[i];
         
     }
     cout << endl;
 	cout << endl;
 	
 	//firstPermutatedVec now contains 56 bits of data.
-	vector<bool> firstPermutatedVec = initialPermutation(initialKeyVector);  
+	vector<bool> initial56KeyVector = initialPermutation(initial64KeyVector);  
 	
-	cout << "First permutation key: " << endl;
+	cout << "First 56-bit key: " << endl;
 	for (int j = 0; j < 56; j++) {
 		
-		cout << firstPermutatedVec[j];
+		cout << initial56KeyVector[j];
 		
 		if ((j+1) % 8 == 0) {
 			cout << endl;
@@ -286,14 +295,15 @@ int main() {
 	cout << endl;
 	cout << endl;
 	
-	vector<bool> firstSubKeybeforePerm = subKey(firstPermutatedVec);
+	vector<bool> shiftedsubKeybeforePerm = newShiftedVector(initial56KeyVector);
 	
-//	string firstSubKeyStringbeforePerm = boolVecToString(firstSubKeybeforePerm);
-//	cout << firstSubKeyStringbeforePerm << endl;
+	string SubKeyStringbeforePerm = boolVecToString(shiftedsubKeybeforePerm);
+	cout << "Merged 56-bit key: " << SubKeyStringbeforePerm << endl;
 
-	vector<bool> secondSubKey = otherPermutations(firstSubKeybeforePerm);
-	string s = boolVecToString(secondSubKey);
-	cout << s << endl;
+	vector<bool> subKeys = subKeyPermutations(SubKeyStringbeforePerm);
+	printArray(subKeys);
+//	string s = boolVecToString(secondSubKey);
+//	cout << s << endl;
 	
       
     return 0;
