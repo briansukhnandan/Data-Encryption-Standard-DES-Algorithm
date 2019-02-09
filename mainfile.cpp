@@ -73,6 +73,13 @@ void leftShiftVector(vector<bool>&a) {
 	
 }
 
+void left2bitShiftVector(vector<bool>&a) {
+	
+	leftShiftVector(a);
+	leftShiftVector(a);
+	
+}
+
 string boolVecToString(vector<bool> x) {
 	
 	string z = "";
