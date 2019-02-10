@@ -1,7 +1,7 @@
 #include <string>
 #include <vector>
 
-#include "permutationTables.h"
+//#include "permutationTables.h"
 
 void leftShiftVector(std::vector<bool>&a) {
 	
@@ -49,7 +49,7 @@ std::string boolVecToString(std::vector<bool> x) {
 	return z;
 }
 
-std::vector<bool> originalKeyPermutation(std::vector<bool> x) {
+std::vector<bool> originalKeyPermutation(std::vector<bool> x, int permTable[]) {
 	
 	std::string z = boolVecToString(x);
 	
@@ -58,7 +58,7 @@ std::vector<bool> originalKeyPermutation(std::vector<bool> x) {
     
     for (int i = 0; i < 64; i++) {
     	
-    	if ( (z[bit64Permutation[i]]) == '1') {
+    	if ( (z[permTable[i] - 1]) == '1') {
     		
     		y.push_back(true);
     		
@@ -75,7 +75,7 @@ std::vector<bool> originalKeyPermutation(std::vector<bool> x) {
 
 //In the initial permutation, the 64 bit key we had will now be reduced to 56 bits.
 //This is the initial 56-bit key.
-std::vector<bool> initialPermutation(std::vector<bool> x) {
+std::vector<bool> initialPermutation(std::vector<bool> x, int permTable[]) {
 	
 	std::string z = boolVecToString(x);
 	
@@ -97,7 +97,7 @@ std::vector<bool> initialPermutation(std::vector<bool> x) {
     
     for (int i = 0; i < 56; i++) {
     	
-    	if ( (z[initialPermTable[i] - 1]) == '1') {
+    	if ( (z[permTable[i] - 1]) == '1') {
     		
     		y.push_back(true);
     		
@@ -226,14 +226,13 @@ std::vector<bool> new2ShiftedVector(std::vector<bool> x) {
 	
 }
 
-std::vector<bool> subKeyPermutations(std::string x) {
+std::vector<bool> subKeyPermutations(std::string x, int permTable[]) {
 	
-//	std::string z = boolVecTostd::string(x);
 	std::vector<bool> a;
 	
 	for (int i = 0; i < 48; i++) {
     	
-    	if ( (x[subKeyPermTable[i] - 1]) == '1') {
+    	if ( (x[permTable[i] - 1]) == '1') {
     		
     		a.push_back(true);
     		
@@ -248,3 +247,4 @@ std::vector<bool> subKeyPermutations(std::string x) {
 	return a;
 	
 }
+
