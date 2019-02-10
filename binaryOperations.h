@@ -2,14 +2,14 @@
 #include <string>
 #include <vector>
 
-string stringToBinary(string x) {
+std::string stringToBinary(std::string x) {
     
-    string y = "";
+    std::string y = "";
     
     for (size_t i = 0; i < x.size(); i++) {
         
         //prints 8 bits binary representation of each character of the string.
-        y += bitset<8>(x.c_str()[i]).to_string();
+        y += std::bitset<8>(x.c_str()[i]).to_string();
         
     }
     
@@ -19,7 +19,7 @@ string stringToBinary(string x) {
     return y;
 }
 
-void insertBinaryVector(string y, vector<bool> &z) {
+void insertBinaryVector(std::string y, std::vector<bool> &z) {
     
     for (int i = 0; i < y.size(); i++) {
 

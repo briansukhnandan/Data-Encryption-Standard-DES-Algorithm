@@ -1,7 +1,9 @@
 #include <string>
 #include <vector>
 
-void leftShiftVector(vector<bool>&a) {
+#include "permutationTables.h"
+
+void leftShiftVector(std::vector<bool>&a) {
 	
 	bool temp = a[0];
 	
@@ -19,16 +21,16 @@ void leftShiftVector(vector<bool>&a) {
 	
 }
 
-void left2bitShiftVector(vector<bool>&a) {
+void left2bitShiftVector(std::vector<bool>&a) {
 	
 	leftShiftVector(a);
 	leftShiftVector(a);
 	
 }
 
-string boolVecToString(vector<bool> x) {
+std::string boolVecToString(std::vector<bool> x) {
 	
-	string z = "";
+	std::string z = "";
 	
 	for (int i = 0; i < x.size(); i++) {
 		
@@ -47,13 +49,37 @@ string boolVecToString(vector<bool> x) {
 	return z;
 }
 
+std::vector<bool> originalKeyPermutation(std::vector<bool> x) {
+	
+	std::string z = boolVecToString(x);
+	
+    //Original vector size is 64.
+    std::vector<bool> y;
+    
+    for (int i = 0; i < 64; i++) {
+    	
+    	if ( (z[bit64Permutation[i]]) == '1') {
+    		
+    		y.push_back(true);
+    		
+		} else {
+			
+			y.push_back(false);
+			
+		} 	
+    	
+	}
+        
+    return y;
+}
+
 //In the initial permutation, the 64 bit key we had will now be reduced to 56 bits.
 //This is the initial 56-bit key.
-vector<bool> initialPermutation(vector<bool> x) {
+std::vector<bool> initialPermutation(std::vector<bool> x) {
 	
-	string z = boolVecToString(x);
+	std::string z = boolVecToString(x);
 	
-/*	cout << "Bool Vector put back into a string: " << endl;
+/*	cout << "Bool Vector put back into a std::string: " << endl;
 	for (int j = 0; j < 64; j++) {
 		
 		cout << z[j];
@@ -66,12 +92,12 @@ vector<bool> initialPermutation(vector<bool> x) {
 	cout << endl; */
 	
     //Original vector size is 64.
-    //This new vector<bool> y will contain 56 bits (elements).
-    vector<bool> y;
+    //This new std::vector<bool> y will contain 56 bits (elements).
+    std::vector<bool> y;
     
     for (int i = 0; i < 56; i++) {
     	
-    	if ( (z[initialPermTable[i]]) == '1') {
+    	if ( (z[initialPermTable[i] - 1]) == '1') {
     		
     		y.push_back(true);
     		
@@ -89,16 +115,16 @@ vector<bool> initialPermutation(vector<bool> x) {
 //This function simply takes in the 56 bit key and produces
 //the new bool vector so we can permute it and save it as
 //another vector bool.
-vector<bool> newShiftedVector(vector<bool> x) {
+std::vector<bool> newShiftedVector(std::vector<bool> x) {
 	
 	//Take the permutated 56-bit vector, and split it in half
 	//Then perform a left shift on both containers.
-	//Put the entire string back together
+	//Put the entire std::string back together
 	//And the 48 bit subkey will be a permutation from the
 	//subkey table
 	
-	vector<bool> a; //Contains first 28 elements.
-	vector<bool> b; //Contains last 28 elements.
+	std::vector<bool> a; //Contains first 28 elements.
+	std::vector<bool> b; //Contains last 28 elements.
 	
 	//Fill the arrays with these elements.
 	for (int i = 0; i < 56; i++) {
@@ -138,7 +164,7 @@ vector<bool> newShiftedVector(vector<bool> x) {
 	cout << endl;
 	cout << endl;  */
 	
-	vector<bool> mergedVector;
+	std::vector<bool> mergedVector;
 
 	for (int k = 0; k < 28; k++) {	
 			
@@ -158,11 +184,11 @@ vector<bool> newShiftedVector(vector<bool> x) {
 	return mergedVector;
 }
 
-vector<bool> new2ShiftedVector(vector<bool> x) {
+std::vector<bool> new2ShiftedVector(std::vector<bool> x) {
 	
 	
-	vector<bool> a; //Contains first 28 elements.
-	vector<bool> b; //Contains last 28 elements.
+	std::vector<bool> a; //Contains first 28 elements.
+	std::vector<bool> b; //Contains last 28 elements.
 	
 	//Fill the arrays with these elements.
 	for (int i = 0; i < 56; i++) {
@@ -182,7 +208,7 @@ vector<bool> new2ShiftedVector(vector<bool> x) {
 	left2bitShiftVector(a);
 	left2bitShiftVector(b);
 	
-	vector<bool> mergedVector;
+	std::vector<bool> mergedVector;
 
 	for (int k = 0; k < 28; k++) {	
 			
@@ -200,10 +226,10 @@ vector<bool> new2ShiftedVector(vector<bool> x) {
 	
 }
 
-vector<bool> subKeyPermutations(string x) {
+std::vector<bool> subKeyPermutations(std::string x) {
 	
-//	string z = boolVecToString(x);
-	vector<bool> a;
+//	std::string z = boolVecTostd::string(x);
+	std::vector<bool> a;
 	
 	for (int i = 0; i < 48; i++) {
     	

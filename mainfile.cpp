@@ -4,7 +4,7 @@
 #include <bitset>
 using namespace std;
 
-#include "permutationTables.h"
+//#include "permutationTables.h"
 #include "vectorOutput.h"
 #include "vectorOperations.h"
 #include "binaryOperations.h"
@@ -39,6 +39,9 @@ int main() {
     }
     cout << endl;
 	cout << endl;
+
+//-----------------------------Generating subkeys---------------------------//
+//--------------------------------------------------------------------------//
 	
 	//firstPermutatedVec now contains 56 bits of data.
 	vector<bool> initial56KeyVector = initialPermutation(initial64KeyVector);  
@@ -84,6 +87,40 @@ int main() {
 	
 	cout << "List of Subkeys: " << endl;
 	print2dBoolVec(listOfSubkeys);
+	cout << endl;
+
+//----------------------------------------------------------------------
+//----------------------------------------------------------------------
+	
+	//Now that we have our subkeys, we can now begin the DES
+	//with the original 64 bit key message.
+	
+	vector<bool> permutated64Key = originalKeyPermutation(initial64KeyVector);
+	printArray(permutated64Key);
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
       
     return 0;
 }
