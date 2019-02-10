@@ -66,6 +66,18 @@ std::vector<bool> expansionOfKey(std::vector<bool> x, std::vector<std::vector<bo
 	}
 	//Z should now contained the permutated 48 bits, which we now
 	//perform an XOR on.
+	//Return this 48 bit vector.
+	return z;
+}
+
+//Starts off with the 48 bit vector from above.
+std::vector<bool> shrink48bitKey(vector<bool> x) {
+	
+	
+	//TODO:
+	
+	
+	
 	
 	
 }
