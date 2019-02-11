@@ -123,11 +123,13 @@ std::vector<std::vector<bool>> shrink48bitKey(std::vector<bool> x) {
 		
 	}
 
+	//Now we have each 6-bit block 
+	
 	
 	
 	
 	//TESTING: Should contain 48 bits.
-	return bit6Blocks;
+	//return bit6Blocks;
 }
 
 
