@@ -139,13 +139,14 @@ int main() {
 	
 	vector<bool> permutated64Key = originalKeyPermutation(initial64KeyVector, bit64Permutation);
 	printArray(permutated64Key);
+	cout << endl;
 	
+	vector<bool> rightHalfExpanded = expansionOfKey(permutated64Key, listOfSubkeys, expansionTable, 0);
 	
-	
-	
-	
-	
-	
+	printArray(rightHalfExpanded);
+	cout << endl;
+	vector<vector<bool>> bit6blocks = shrink48bitKey(rightHalfExpanded);
+	print2dBoolVecNoLine(bit6blocks);
 	
 	
 	
