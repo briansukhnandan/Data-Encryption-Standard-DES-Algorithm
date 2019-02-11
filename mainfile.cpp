@@ -161,7 +161,7 @@ int main() {
 	//firstPermutatedVec now contains 56 bits of data.
 	vector<bool> initial56KeyVector = initialPermutation(initial64KeyVector, bit56Permutation);  
 	
-	vector<vector<bool>> listOfSubkeys;
+	vector<vector<bool> > listOfSubkeys;
 	
 	vector<bool> shiftedsubKeybeforePerm = newShiftedVector(initial56KeyVector);
 
@@ -218,9 +218,11 @@ int main() {
 	
 	printArray(rightHalfExpanded);
 	cout << endl;
-	vector<vector<bool>> bit6blocks = shrink48bitKey(rightHalfExpanded);
+	cout << endl;
+	vector<vector<bool> > bit6blocks = shrink48bitKey(rightHalfExpanded);
+//	string x = shrink48bitKey(rightHalfExpanded);
 	print2dBoolVecNoLine(bit6blocks);
-	
+//	cout << x;	
 	
 	
 	

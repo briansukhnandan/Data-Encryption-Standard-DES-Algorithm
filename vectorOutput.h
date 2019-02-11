@@ -15,7 +15,7 @@ void printArray(std::vector<bool> a) {
 		
 }
 
-void print2dBoolVec(std::vector<std::vector<bool>> x) {
+void print2dBoolVec(std::vector<std::vector<bool> > x) {
 	
 	for (size_t i = 0; i < x.size(); i++) {
 		
@@ -33,7 +33,7 @@ void print2dBoolVec(std::vector<std::vector<bool>> x) {
 	
 }
 
-void print2dBoolVecNoLine(std::vector<std::vector<bool>> x) {
+void print2dBoolVecNoLine(std::vector<std::vector<bool> > x) {
 	
 	for (size_t i = 0; i < x.size(); i++) {
 		

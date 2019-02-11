@@ -1,8 +1,8 @@
 #include <vector>
 #include <stdio.h>
+#include <string>
 
-
-
+#include <iostream>
 //The two vectors must be the same size.
 std::vector<bool> xorCipher(std::vector<bool>&x, std::vector<bool> y) {
 	
@@ -28,7 +28,7 @@ std::vector<bool> xorCipher(std::vector<bool>&x, std::vector<bool> y) {
 	return z;
 }
 
-std::vector<bool> expansionOfKey(std::vector<bool> x, std::vector<std::vector<bool>> subKeyList, int permTable[], int index) {
+std::vector<bool> expansionOfKey(std::vector<bool> x, std::vector<std::vector<bool> > subKeyList, int permTable[], int index) {
 	//Split permutated 64-bit key into half.
 	//We now have a left side and right side.
 	//We are going to expand the 32 bit right side half
@@ -96,14 +96,15 @@ std::vector<bool> expansionOfKey(std::vector<bool> x, std::vector<std::vector<bo
 // 0101 (has to be converted back to a 4 bit array so we can end up
 // with 32 bits when this function ends).
 
-std::vector<std::vector<bool>> shrink48bitKey(std::vector<bool> x) {
+//std::string shrink48bitKey(std::vector<bool> x) {
+std::vector<std::vector<bool> > shrink48bitKey(std::vector<bool> x) {
 	
 	//Will be used to store the 32 bits.
 	std::vector<bool> z;
 	
 	//TODO:
 	int index = 0;
-	std::vector<std::vector<bool>> bit6Blocks;
+	std::vector<std::vector<bool> > bit6Blocks;
 	
 	std::vector<bool> temp;
 	//Loop through 6 bit blocks
@@ -124,12 +125,31 @@ std::vector<std::vector<bool>> shrink48bitKey(std::vector<bool> x) {
 	}
 
 	//Now we have each 6-bit block 
+	std::string y = "";
 	
-	
-	
-	
+	for (size_t i = 0; i < bit6Blocks.size(); i++) {
+		
+		for (size_t j = 0; j < bit6Blocks[0].size(); j++) {
+			
+			if (j == bit6Blocks[0].size() - 1) {
+				
+				if (bit6Blocks[i][0] == true) y+= "1"; 
+				else y+= "0";
+				
+				if (bit6Blocks[i][j] == true) y+= "1";
+				else y+= "0";
+				
+				
+			}
+			
+			
+		}
+		break;
+	}
+	std::cout << "Ending bits" << y << std::endl;
+//	return y;
 	//TESTING: Should contain 48 bits.
-	//return bit6Blocks;
+	return bit6Blocks;
 }
 
 
