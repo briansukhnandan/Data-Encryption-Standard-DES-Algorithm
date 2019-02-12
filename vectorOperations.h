@@ -73,23 +73,36 @@ std::vector<bool> originalKeyPermutation(std::vector<bool> x, int permTable[]) {
     return y;
 }
 
+std::vector<bool> finalKeyPermutation(std::vector<bool> x, int permTable[]) {
+	
+	std::string z = boolVecToString(x);
+	
+    //vector size is 64.
+    std::vector<bool> y;
+    
+    for (int i = 0; i < 64; i++) {
+    	
+    	if ( (z[permTable[i] - 1]) == '1') {
+    		
+    		y.push_back(true);
+    		
+		} else {
+			
+			y.push_back(false);
+			
+		} 	
+    	
+	}
+        
+    return y;
+}
+
+
 //In the initial permutation, the 64 bit key we had will now be reduced to 56 bits.
 //This is the initial 56-bit key.
 std::vector<bool> initialPermutation(std::vector<bool> x, int permTable[]) {
 	
 	std::string z = boolVecToString(x);
-	
-/*	cout << "Bool Vector put back into a std::string: " << endl;
-	for (int j = 0; j < 64; j++) {
-		
-		cout << z[j];
-		
-		if ((j+1) % 8 == 0) {
-			cout << endl;
-		}
-		
-	} 
-	cout << endl; */
 	
     //Original vector size is 64.
     //This new std::vector<bool> y will contain 56 bits (elements).
@@ -140,29 +153,10 @@ std::vector<bool> newShiftedVector(std::vector<bool> x) {
 		}
 				
 	}
-	/*
-	cout << "First 28 bits of the 56-bit key: ";
-	for (int j = 0; j < 28; j++) cout << a[j];
-	cout << endl;
-	cout << endl;
-	
-	cout << "Last 28 bits of the 56-bit key: ";
-	for (int j = 0; j < 28; j++) cout << b[j];
-	cout << endl;
-	cout << endl; */
+
 	
 	leftShiftVector(a);
 	leftShiftVector(b);
-	/*
-	cout << "Shifted left First 28 bits of the 56-bit key: ";
-	for (size_t j = 0; j < a.size(); j++) cout << a[j];
-	cout << endl;
-	cout << endl;
-	
-	cout << "Shifted 28 Last 28 bits of the 56-bit key: ";
-	for (size_t j = 0; j < b.size(); j++) cout << b[j];
-	cout << endl;
-	cout << endl;  */
 	
 	std::vector<bool> mergedVector;
 

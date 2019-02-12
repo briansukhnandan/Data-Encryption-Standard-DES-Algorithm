@@ -4,7 +4,6 @@
 #include <bitset>
 #include <algorithm>
 #include <iostream>
-//The two vectors must be the same size.
 
 void printArray(std::vector<bool> a) {
 	
@@ -12,12 +11,27 @@ void printArray(std::vector<bool> a) {
 		
 		std::cout << a[i];
 		
-	//	if ((i+1) % 8 == 0) {
-		//	cout << endl;
-	//	} 
 				
 	}
 	std::cout << std::endl;
+}
+
+void insertBinaryVector(std::string y, std::vector<bool> &z) {
+    
+    for (int i = 0; i < y.size(); i++) {
+
+        if (y[i] == '0') {
+            
+            z.push_back(false);
+            
+        } else {
+            
+            z.push_back(true);
+            
+        }
+        
+    }
+    
 }
 
 int stringofBinarytoInt(std::string s) {
@@ -36,6 +50,23 @@ int stringofBinarytoInt(std::string s) {
 	
 	return number;
 }
+
+std::string stringTo8Binary(std::string x) {
+    
+    std::string y = "";
+    
+    for (size_t i = 0; i < x.size(); i++) {
+        
+        //prints 8 bits binary representation of each character of the string.
+        y += std::bitset<8>(x.c_str()[i]).to_string();
+        
+    }
+    
+    //Returns a string of the binary representation.
+    //In c++, since strings can be treated as an array,
+    //this seems like a suitable choice.
+    return y;
+} 
 
 std::string stringToBinary(std::string x) {
     
@@ -57,13 +88,9 @@ std::string stringToBinary(std::string x) {
 std::string intToBinary(int x) {
     
     std::string y = "";
-    
-   // for (size_t i = 0; i < x.size(); i++) {
-        
-        //prints 8 bits binary representation of each character of the string.
-        y += std::bitset<4>(x).to_string();
-        
-//    }
+           
+    //prints 8 bits binary representation of each character of the string.
+    y += std::bitset<4>(x).to_string();
     
     //Returns a string of the binary representation.
     //In c++, since strings can be treated as an array,
@@ -173,13 +200,11 @@ std::vector<bool> shrink48bitKey(std::vector<bool> x, int sBoxes[8][4][16]) {
 		colCoordNumber = stringofBinarytoInt(colCoord);
 		
 		int a = sBoxes[i][rowCoordNumber][colCoordNumber];
-	//	std::string numberAtsBox = std::to_string(a);
-		std::cout << a << std::endl;
+
 		//Now numbersAtsBox is a binary-string representation of the
 		//integer it just was.
 		std::string numberAtsBox = intToBinary(a);
 		
-		std::cout << a << " converted to binary 4-bit: " << numberAtsBox << std::endl;
 		
 		for (int i = 0; i < numberAtsBox.size(); i++) {
 			if (numberAtsBox[i] == '1') bit4Blocks.push_back(true);
@@ -190,11 +215,6 @@ std::vector<bool> shrink48bitKey(std::vector<bool> x, int sBoxes[8][4][16]) {
 		rowCoord = ""; colCoord = "";
 	}
 	
-//	printArray(bit4Blocks);
-//	std::cout << "Ending bits " << rowCoord << std::endl;
-//	std::cout << "Inner bits " << colCoord << std::endl;
-//	return y;
-	//TESTING: Should contain 32 bits.
 	return bit4Blocks;
 }
 
@@ -262,7 +282,25 @@ std::vector<bool> expansionOfKey(std::vector<bool> x, std::vector<std::vector<bo
 	
 	//Shrink z back to 32 bits.
 	b = shrink48bitKey(z, sBoxes);
-	return b;
+	b = xorCipher(a, b);
+	
+	std::vector<bool> bit64KeyPostRound;
+	
+	for (int k = 0; k < 64; k++) {
+		
+		if (k < 32) {
+			
+			bit64KeyPostRound.push_back(copyOfB[k]);
+			
+		} else {
+			
+			bit64KeyPostRound.push_back(b[k]);
+			
+		}
+		
+	}
+	
+	return bit64KeyPostRound;
 }
 
 // Starts off with the 48 bit vector from above.

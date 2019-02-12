@@ -12,7 +12,6 @@ using namespace std;
 
 #include "vectorOutput.h"
 #include "vectorOperations.h"
-#include "binaryOperations.h"
 #include "keyExpansion.h"
 
 //Global variables for DES permutations
@@ -50,6 +49,15 @@ int expansionTable[48] = { 32, 1, 2, 3, 4, 5,
 						   20, 21, 22, 23, 24, 25,
 						   24, 25, 26, 27, 28, 29,
 						   28, 29, 30, 31, 32, 1};
+						   
+int finalPermutation[64] = { 40, 8, 48, 16, 56, 24, 64, 32,
+							 39, 7, 47, 15, 55, 23, 63, 31,
+							 38, 6, 46, 14, 54, 22, 62, 30,
+							 37, 5, 45, 13, 53, 21, 61, 29,			
+							 36, 4, 44, 12, 52, 20, 60, 28,  
+							 35, 3, 43, 11, 51, 19, 59, 27, 
+							 34, 2, 42, 10, 50, 18, 58, 26, 
+							 33, 1, 41, 9, 49, 17, 57, 25 };					
 						   
 int sBoxes[8][4][16] = { 
 							{ 
@@ -137,9 +145,12 @@ int sBoxes[8][4][16] = {
 
 int main() {
     
-    string stringKey = "ABCDEFGH";
+    string stringKey;
+    cout << "Enter a key of length 8 (ex: ABCDEFGH): ";
+    cin >> stringKey;
+    cout << endl;
     
-    string newBinaryKey = stringToBinary(stringKey);
+    string newBinaryKey = stringTo8Binary(stringKey);
 
     vector<bool> initial64KeyVector;
     
@@ -174,7 +185,7 @@ int main() {
 			
 			SubKeyStringbeforePerm = boolVecToString(shiftedsubKeybeforePerm);
 			
-			cout << "Shifted 56-bit key used to get Subkey (Pre-permutation) " << (j+1) << " " << SubKeyStringbeforePerm << endl << endl;
+//			cout << "Shifted 56-bit key used to get Subkey (Pre-permutation) " << (j+1) << " " << SubKeyStringbeforePerm << endl << endl;
 		
 			subKey = subKeyPermutations(SubKeyStringbeforePerm, subKeyPermTable);
 		
@@ -188,7 +199,7 @@ int main() {
 			
 			SubKeyStringbeforePerm = boolVecToString(shiftedsubKeybeforePerm);
 			
-			cout << "Shifted 56-bit key used to get Subkey (Pre-permutation) " << (j+1) << " " << SubKeyStringbeforePerm << endl << endl;
+//			cout << "Shifted 56-bit key used to get Subkey (Pre-permutation) " << (j+1) << " " << SubKeyStringbeforePerm << endl << endl;
 			
 			subKey = subKeyPermutations(SubKeyStringbeforePerm, subKeyPermTable);
 		
@@ -211,35 +222,44 @@ int main() {
 	//with the original 64 bit key message.
 	
 	vector<bool> permutated64Key = originalKeyPermutation(initial64KeyVector, bit64Permutation);
-	printArray(permutated64Key);
+
 	cout << endl;
 	
-	vector<bool> rightHalfExpanded = expansionOfKey(permutated64Key, listOfSubkeys, expansionTable, 0, sBoxes);
+	vector<bool> bit64KeyPostRounds;
 	
-	printArray(rightHalfExpanded);
+	for (int j = 0; j < 16; j++) {
+		
+		bit64KeyPostRounds = expansionOfKey(permutated64Key, listOfSubkeys, expansionTable, j, sBoxes);
+		
+	}
+	
+//	printArray(bit64KeyPostRounds);
+//	cout << endl;
+//	cout << endl;	
+	
+	//Now we have to reverse the halves, so put the last 32 as the first,
+	//then first 32 as the last.
+	vector<bool> reversedKey;
+	
+	for (int k = 0; k < 64; k++) {
+		
+		if (k < 32) {
+			reversedKey.push_back(bit64KeyPostRounds[k+32]);
+		} else {
+			reversedKey.push_back(bit64KeyPostRounds[k-32]);		
+		}
+				
+	}
+	
+	//Finally we permute this one last time according to the finalPermutation table
+	//and we have our ciphertext.
+	
+	vector<bool> cipherText = finalKeyPermutation(reversedKey, finalPermutation);
+	
+	cout << "Ciphertext: " << endl;
+	printArray(cipherText);
 	cout << endl;
-	cout << endl;
-//	vector<vector<bool> > bit6blocks = shrink48bitKey(rightHalfExpanded);
-//	string x = shrink48bitKey(rightHalfExpanded);
-//	print2dBoolVecNoLine(bit6blocks);
-//	cout << x;	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-      
+	   
     return 0;
 }
 
