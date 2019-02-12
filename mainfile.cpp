@@ -214,14 +214,14 @@ int main() {
 	printArray(permutated64Key);
 	cout << endl;
 	
-	vector<bool> rightHalfExpanded = expansionOfKey(permutated64Key, listOfSubkeys, expansionTable, 0);
+	vector<bool> rightHalfExpanded = expansionOfKey(permutated64Key, listOfSubkeys, expansionTable, 0, sBoxes);
 	
 	printArray(rightHalfExpanded);
 	cout << endl;
 	cout << endl;
-	vector<vector<bool> > bit6blocks = shrink48bitKey(rightHalfExpanded);
+//	vector<vector<bool> > bit6blocks = shrink48bitKey(rightHalfExpanded);
 //	string x = shrink48bitKey(rightHalfExpanded);
-	print2dBoolVecNoLine(bit6blocks);
+//	print2dBoolVecNoLine(bit6blocks);
 //	cout << x;	
 	
 	

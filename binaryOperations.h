@@ -1,7 +1,7 @@
 #include <bitset>
 #include <string>
 #include <vector>
-
+/*
 std::string stringToBinary(std::string x) {
     
     std::string y = "";
@@ -17,7 +17,7 @@ std::string stringToBinary(std::string x) {
     //In c++, since strings can be treated as an array,
     //this seems like a suitable choice.
     return y;
-}
+} */
 
 void insertBinaryVector(std::string y, std::vector<bool> &z) {
     
@@ -36,5 +36,7 @@ void insertBinaryVector(std::string y, std::vector<bool> &z) {
     }
     
 }
+
+
 
 

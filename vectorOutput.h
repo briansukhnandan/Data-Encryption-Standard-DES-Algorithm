@@ -1,6 +1,6 @@
 #include <vector>
 #include <iostream>
-
+/*
 void printArray(std::vector<bool> a) {
 	
 	for (int i = 0; i < a.size(); i++) {
@@ -13,7 +13,7 @@ void printArray(std::vector<bool> a) {
 				
 	}
 		
-}
+} */
 
 void print2dBoolVec(std::vector<std::vector<bool> > x) {
 	

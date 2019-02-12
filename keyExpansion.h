@@ -1,9 +1,77 @@
 #include <vector>
 #include <stdio.h>
 #include <string>
-
+#include <bitset>
+#include <algorithm>
 #include <iostream>
 //The two vectors must be the same size.
+
+void printArray(std::vector<bool> a) {
+	
+	for (int i = 0; i < a.size(); i++) {
+		
+		std::cout << a[i];
+		
+	//	if ((i+1) % 8 == 0) {
+		//	cout << endl;
+	//	} 
+				
+	}
+	std::cout << std::endl;
+}
+
+int stringofBinarytoInt(std::string s) {
+	
+	int a = stoi(s);
+	int power = 0;
+	
+	int number;
+	
+	while (a != 0) {
+		
+		number += (a%10) * std::pow(2, power);
+		a /= 10;
+		power++;
+	}
+	
+	return number;
+}
+
+std::string stringToBinary(std::string x) {
+    
+    std::string y = "";
+    
+    for (size_t i = 0; i < x.size(); i++) {
+        
+        //prints 8 bits binary representation of each character of the string.
+        y += std::bitset<4>(x.c_str()[i]).to_string();
+        
+    }
+    
+    //Returns a string of the binary representation.
+    //In c++, since strings can be treated as an array,
+    //this seems like a suitable choice.
+    return y;
+} 
+
+std::string intToBinary(int x) {
+    
+    std::string y = "";
+    
+   // for (size_t i = 0; i < x.size(); i++) {
+        
+        //prints 8 bits binary representation of each character of the string.
+        y += std::bitset<4>(x).to_string();
+        
+//    }
+    
+    //Returns a string of the binary representation.
+    //In c++, since strings can be treated as an array,
+    //this seems like a suitable choice.
+    return y;
+} 
+
+
 std::vector<bool> xorCipher(std::vector<bool>&x, std::vector<bool> y) {
 	
 	std::vector<bool> z;
@@ -28,7 +96,109 @@ std::vector<bool> xorCipher(std::vector<bool>&x, std::vector<bool> y) {
 	return z;
 }
 
-std::vector<bool> expansionOfKey(std::vector<bool> x, std::vector<std::vector<bool> > subKeyList, int permTable[], int index) {
+//Does right half operations.
+//This comes after XOR with the subkey.
+//Call this function inside of expansionKey
+//expansio
+//std::string shrink48bitKey(std::vector<bool> x) {
+std::vector<bool> shrink48bitKey(std::vector<bool> x, int sBoxes[8][4][16]) {
+	
+	//Will be used to store the 32 bits.
+	std::vector<bool> z;
+	
+	int index = 0;
+	std::vector<std::vector<bool> > bit6Blocks;
+	
+	std::vector<bool> temp;
+	//Loop through 6 bit blocks
+	//Store them in an array within an array.
+	//Push that second order array in the original array.
+	for (int i = 0; i < 8; i++) {
+		
+		for (int j = 0; j < 6; j++) {
+			
+			temp.push_back(x[index]);
+			
+			index++;
+		}
+		
+		bit6Blocks.push_back(temp);
+		temp.clear();	
+		
+	}
+
+	//Now we have each 6-bit block 
+	std::string rowCoord = "";
+	std::string colCoord = "";
+	
+	//Will contain the "shrunken" 4 bit blocks, obtained from bit6blocks.
+	std::vector<bool> bit4Blocks;
+	
+	int rowCoordNumber;
+	int colCoordNumber;
+	
+	for (int i = 0; i < bit6Blocks.size(); i++) {
+		
+		for (int j = 0; j < bit6Blocks[0].size(); j++) {
+			
+			if (j == bit6Blocks[0].size() - 1) {
+				
+				if (bit6Blocks[i][0] == true) rowCoord+= "1"; 
+				else rowCoord+= "0";
+				
+				if (bit6Blocks[i][j] == true) rowCoord+= "1";
+				else rowCoord+= "0";
+				
+				//Copies inner 4 bits into colCoord.
+				for (size_t k = 1; k < bit6Blocks[0].size() - 1; k++) {
+					if (bit6Blocks[i][k] == true) colCoord += "1";
+					else colCoord += "0";
+				}
+				
+				
+				
+			}
+			
+			
+		}
+		//TODO
+		//Convert rowCoord and ColCoord to binary and then that binary to an int.
+		//Take these two ints and get the number at that index at permtable.
+		//Turn that index number in permtable and convert it to binary.
+		//From this loop we will generate a vector<vector<bool>> (a vector that contains 8 vectors, each with 4 elements inside).
+		//Also we clear rowCoord and colCoord at the end of this for the next 6 iterations
+		//of that inner loop.
+		
+		rowCoordNumber = stringofBinarytoInt(rowCoord);
+		colCoordNumber = stringofBinarytoInt(colCoord);
+		
+		int a = sBoxes[i][rowCoordNumber][colCoordNumber];
+	//	std::string numberAtsBox = std::to_string(a);
+		std::cout << a << std::endl;
+		//Now numbersAtsBox is a binary-string representation of the
+		//integer it just was.
+		std::string numberAtsBox = intToBinary(a);
+		
+		std::cout << a << " converted to binary 4-bit: " << numberAtsBox << std::endl;
+		
+		for (int i = 0; i < numberAtsBox.size(); i++) {
+			if (numberAtsBox[i] == '1') bit4Blocks.push_back(true);
+			else bit4Blocks.push_back(false);
+		}
+		
+		
+		rowCoord = ""; colCoord = "";
+	}
+	
+//	printArray(bit4Blocks);
+//	std::cout << "Ending bits " << rowCoord << std::endl;
+//	std::cout << "Inner bits " << colCoord << std::endl;
+//	return y;
+	//TESTING: Should contain 32 bits.
+	return bit4Blocks;
+}
+
+std::vector<bool> expansionOfKey(std::vector<bool> x, std::vector<std::vector<bool> > subKeyList, int permTable[], int index, int sBoxes[8][4][16]) {
 	//Split permutated 64-bit key into half.
 	//We now have a left side and right side.
 	//We are going to expand the 32 bit right side half
@@ -36,6 +206,7 @@ std::vector<bool> expansionOfKey(std::vector<bool> x, std::vector<std::vector<bo
 	
 	std::vector<bool> a; //First 32 bits
 	std::vector<bool> b; //Last 32 bits that we perform operations on.
+	
 	
 	std::vector<bool> indexedSubkey; //Stores the current subkey.
 	
@@ -63,6 +234,13 @@ std::vector<bool> expansionOfKey(std::vector<bool> x, std::vector<std::vector<bo
 		
 	}
 	
+	//Copy of the original right half.
+	//This will change at every round.
+	//After we perform the xor with the table data
+	//and left, it will be our new right side,
+	//which will be copied into here.
+	std::vector<bool> copyOfB = b;
+	
 	
 	for (int i = 0; i < 48; i++) {
 		
@@ -79,11 +257,12 @@ std::vector<bool> expansionOfKey(std::vector<bool> x, std::vector<std::vector<bo
 	}
 	//Z should now contained the permutated 48 bits, which we now
 	//perform an XOR on.
-	xorCipher(z, indexedSubkey);
+	z = xorCipher(z, indexedSubkey);
 	
 	
-	//Return this 48 bit vector.
-	return z;
+	//Shrink z back to 32 bits.
+	b = shrink48bitKey(z, sBoxes);
+	return b;
 }
 
 // Starts off with the 48 bit vector from above.
@@ -96,61 +275,8 @@ std::vector<bool> expansionOfKey(std::vector<bool> x, std::vector<std::vector<bo
 // 0101 (has to be converted back to a 4 bit array so we can end up
 // with 32 bits when this function ends).
 
-//std::string shrink48bitKey(std::vector<bool> x) {
-std::vector<std::vector<bool> > shrink48bitKey(std::vector<bool> x) {
-	
-	//Will be used to store the 32 bits.
-	std::vector<bool> z;
-	
-	//TODO:
-	int index = 0;
-	std::vector<std::vector<bool> > bit6Blocks;
-	
-	std::vector<bool> temp;
-	//Loop through 6 bit blocks
-	//Store them in an array within an array.
-	//Push that second order array in the original array.
-	for (int i = 0; i < 8; i++) {
-		
-		for (int j = 0; j < 6; j++) {
-			
-			temp.push_back(x[index]);
-			
-			index++;
-		}
-		
-		bit6Blocks.push_back(temp);
-		temp.clear();	
-		
-	}
 
-	//Now we have each 6-bit block 
-	std::string y = "";
-	
-	for (size_t i = 0; i < bit6Blocks.size(); i++) {
-		
-		for (size_t j = 0; j < bit6Blocks[0].size(); j++) {
-			
-			if (j == bit6Blocks[0].size() - 1) {
-				
-				if (bit6Blocks[i][0] == true) y+= "1"; 
-				else y+= "0";
-				
-				if (bit6Blocks[i][j] == true) y+= "1";
-				else y+= "0";
-				
-				
-			}
-			
-			
-		}
-		break;
-	}
-	std::cout << "Ending bits" << y << std::endl;
-//	return y;
-	//TESTING: Should contain 48 bits.
-	return bit6Blocks;
-}
+
 
 
 
