@@ -3,6 +3,7 @@
 #include <string>
 #include <bitset>
 #include <algorithm>
+#include <cmath>
 #include <iostream>
 
 void printArray(std::vector<bool> a) {
@@ -211,7 +212,7 @@ std::vector<bool> shrink48bitKey(std::vector<bool> x, int sBoxes[8][4][16]) {
 			else bit4Blocks.push_back(false);
 		}
 		
-		
+		// Reset values
 		rowCoord = ""; colCoord = "";
 	}
 	
