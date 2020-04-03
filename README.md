@@ -1,10 +1,10 @@
 # DES Algorithm #
 
-A modern block-cipher currently developed by IBM to encrypt and decrypt messages.
-You have the ability to have your own 8-bit key to create a unique ciphertext.
+The DES Algorithm is a standardized block-cipher developed by IBM and declared a Federal Info Processing Standard in 1977. The algorithm, quite simply is used to encrypt and decrypt messages.
 
-# What I learned #
+# How to use #
 
-- How to perform bit shifting and substitutions using std::bitset.
-- The concept of XOR logic.
-- The application of large data structures to cryptosystems.
+When running the program via: g++ mainfile.cpp
+
+You will be prompted to enter an 8 character long key. You can enter anything you want, and you will be presented with the resulting ciphertext.
+
